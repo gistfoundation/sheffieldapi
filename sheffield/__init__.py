@@ -1,5 +1,5 @@
 from flask import Flask
-from flaskext.mongoalchemy import MongoAlchemy
+from flaskext.mongoalchemy import MongoAlchemy, document
 from utils import start_end_date, start_end_time
 app = Flask(__name__)
 app.config['MONGOALCHEMY_DATABASE'] = 'test'
@@ -23,8 +23,8 @@ class Event(db.Document):
     venue_contact = db.StringField(required=False)
     venue_location = db.ListField(db.FloatField(), required=False)
 
-    # TODO: Where do I import index from...
-    # name_start_date = Index().ascending('name').ascending('start_date').unique(True)
+    name_start_date = document.Index().ascending(
+            'name').ascending('start_date').unique(drop_dups=True)
 
     @classmethod
     def from_json(self, ob):
