@@ -1,26 +1,30 @@
-from mongoalchemy.document import Document, Index
-from mongoalchemy import fields
+from flask import Flask
+from flaskext.mongoalchemy import MongoAlchemy
 from utils import start_end_date, start_end_time
+app = Flask(__name__)
+app.config['MONGOALCHEMY_DATABASE'] = 'test'
+db = MongoAlchemy(app)
 
 
-class Event(Document):
+class Event(db.Document):
     """Model representing Event's happening in Sheffield. The data we're storing
     here is currently collected from EventSheffield. The fields we're storing are
     limited due to this. However we expect to extend this API.
     """
-    name = fields.StringField()
-    start_time = fields.StringField(required=False)
-    end_time = fields.StringField(required=False)
-    start_date = fields.DateTimeField(required=False)
-    end_date = fields.DateTimeField(required=False)
-    venue_id = fields.IntField(required=False)
-    detail_description = fields.StringField(required=False)
-    detail_url = fields.StringField(required=False)
-    venue = fields.StringField(required=False)
-    venue_contact = fields.StringField(required=False)
-    venue_location = fields.ListField(fields.FloatField(), required=False)
+    name = db.StringField()
+    start_time = db.StringField(required=False)
+    end_time = db.StringField(required=False)
+    start_date = db.DateTimeField(required=False)
+    end_date = db.DateTimeField(required=False)
+    venue_id = db.IntField(required=False)
+    detail_description = db.StringField(required=False)
+    detail_url = db.StringField(required=False)
+    venue = db.StringField(required=False)
+    venue_contact = db.StringField(required=False)
+    venue_location = db.ListField(db.FloatField(), required=False)
 
-    name_start_date = Index().ascending('name').ascending('start_date').unique(True)
+    # TODO: Where do I import index from...
+    # name_start_date = Index().ascending('name').ascending('start_date').unique(True)
 
     @classmethod
     def from_json(self, ob):
